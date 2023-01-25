@@ -1,90 +1,46 @@
 #pragma once
+#include <string.h>
 #include <iostream>
 
-class Marine
+class Photon_Cannon
 {
-	int hp;
+private:
+	int hp, shield;
 	int coord_x, coord_y;
-	int damage; //공격력
-	bool is_dead;
-	char* name; //마린 이름 
+	int damage;
 
 public:
-	Marine(); //기본 생성자
-	Marine(int x, int y, const char* marine_name); //이름까지 지정
-	Marine(int x, int y); //x, y 좌표에 마린 생성
-	~Marine();
-
-	int attack(); //데미지 리턴
-	void be_attacked(int damage_earn); //입는 데미지
-	void move(int x, int y); //새로운 위치
+	Photon_Cannon(int x, int y);
+	Photon_Cannon(const Photon_Cannon& pc);
 
 	void show_status();
 };
 
-Marine::Marine()
+Photon_Cannon::Photon_Cannon(const Photon_Cannon& pc) //다른 객체를 상수 레퍼런스로 받는다
 {
-	hp = 50;
-	coord_x = coord_y = 0;
-	damage = 5;
-	is_dead = false;
-	name = NULL;
+	std::cout << "복사 생성자 호출 !" << std::endl;
+	hp = pc.hp;
+	shield = pc.shield;
+	coord_x = pc.coord_x;
+	coord_y = pc.coord_y;
+	damage = pc.damage;
 }
 
-Marine::Marine(int x, int y, const char* marine_name)
+Photon_Cannon::Photon_Cannon(int x, int y)
 {
-	name = new char[strlen(marine_name) + 1]; //마린 이름 길이 + 1 만큼 할당
-	strcpy_s(name, sizeof(marine_name), marine_name);
-
+	std::cout << "생성자 호출 !" << std::endl;
+	hp = shield = 100;
 	coord_x = x;
 	coord_y = y;
-	hp = 50;
-	damage = 5;
-	is_dead = false;
-	name = NULL;
+	damage = 20;
 }
 
-Marine::Marine(int x, int y)
+void Photon_Cannon::show_status()
 {
-	coord_x = x;
-	coord_y = y;
-	hp = 50;
-	damage = 5;
-	is_dead = false;
-	name = NULL;
-}
-
-void Marine::move(int x, int y)
-{
-	coord_x = x;
-	coord_y = y;
-}
-
-int Marine::attack()
-{
-	return damage;
-}
-
-void Marine::be_attacked(int damage_earn)
-{
-	hp = hp - damage_earn;
-
-	if (hp <= 0)
-		is_dead = true;
-}
-
-void Marine::show_status()
-{
-	std::cout << " *** Marine *** " << std::endl;
-	std::cout << " Location : ( " << coord_x << " , " << coord_y << " ) " << std::endl;
+	std::cout << "Photon Cannon " << std::endl;
+	std::cout << " Location : ( " << coord_x << " , " 
+		<< coord_y << " ) " << std::endl;
 	std::cout << " HP : " << hp << std::endl;
 }
 
-Marine::~Marine()
-{
-	std::cout << name << " 의 소멸자 호출!" << std::endl;
-	if (name != NULL)
-	{
-		delete[] name;
-	}
-}
+//복사 생성자 공부 1/25
