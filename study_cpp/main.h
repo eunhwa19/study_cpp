@@ -1,46 +1,139 @@
 #pragma once
-#include <string.h>
+#include <string>
 #include <iostream>
 
-class Photon_Cannon
+// Vector 자체 제작
+class Vector
 {
-private:
-	int hp, shield;
-	int coord_x, coord_y;
-	int damage;
+	std::string* data; //데이터 보관
+	int capacity; // 현재 할당된 크기 
+	int length; // 현제 실제로 사용하는 양
 
 public:
-	Photon_Cannon(int x, int y);
-	Photon_Cannon(const Photon_Cannon& pc);
+	Vector(int n = 1); //생성자
 
-	void show_status();
+	void push_back(std::string s); // 새 원소 추가
+	std::string operator[](int i); // i번째 원소에 접근
+	void remove(int x); // x번째 위치한 원소 제거
+	int size(); // 벡터 크기
+
+	~Vector(); //소멸자
 };
 
-Photon_Cannon::Photon_Cannon(const Photon_Cannon& pc) //다른 객체를 상수 레퍼런스로 받는다
+void Vector::push_back(std::string s)
 {
-	std::cout << "복사 생성자 호출 !" << std::endl;
-	hp = pc.hp;
-	shield = pc.shield;
-	coord_x = pc.coord_x;
-	coord_y = pc.coord_y;
-	damage = pc.damage;
+	if (capacity <= length) //할당된 크기가 실제 사용하는 양보다 작으면
+	{
+		std::string* temp = new std::string[capacity * 2]; // 원래 크기의 두 배인 새로운 string 생성
+		for (int i = 0; i < length; i++) 
+		{
+			temp[i] = data[i]; // data에 있는 원소를 그대로 temp에 집어넣음
+		}
+		delete[] data; 
+		data = temp;
+		capacity = capacity * 2;
+	}
+
+	data[length] = s;
+	length++;
 }
 
-Photon_Cannon::Photon_Cannon(int x, int y)
-{
-	std::cout << "생성자 호출 !" << std::endl;
-	hp = shield = 100;
-	coord_x = x;
-	coord_y = y;
-	damage = 20;
+std::string Vector::operator[](int i) 
+{ 
+	return data[i]; 
 }
 
-void Photon_Cannon::show_status()
+void Vector::remove(int x)
 {
-	std::cout << "Photon Cannon " << std::endl;
-	std::cout << " Location : ( " << coord_x << " , " 
-		<< coord_y << " ) " << std::endl;
-	std::cout << " HP : " << hp << std::endl;
+	for (int i = x + 1; i < length; i++)
+	{
+		data[i - 1] = data[i];
+	}
+	length--;
 }
 
-//복사 생성자 공부 1/25
+int Vector::size()
+{
+	return length;
+}
+
+Vector::~Vector()
+{
+	if (data)
+	{
+		delete[] data;
+	}
+}
+
+// stack 자체 제작
+class Stack 
+{
+	struct Node
+	{
+
+		Node* prev;
+		std::string s;
+
+		Node(Node* prev, std::string s) : prev(prev), s(s) {}
+	};
+
+	Node* current;
+	Node start;
+
+public:
+	Stack(); 
+
+	void push(std::string s);
+	std::string pop();
+	std::string peek();
+	bool is_empty();
+
+	~Stack();
+};
+
+Stack::Stack() : start(NULL, "") 
+{ 
+	current = &start; 
+}
+
+void Stack::push(std::string s)
+{
+	Node* n = new Node(current, s);
+	current = n;
+}
+
+std::string Stack::pop()
+{	
+	if (current == &start) 
+		return "";
+
+	std::string s = current->s;
+	Node* prev = current;
+	current = current->prev;
+
+	delete prev;
+	return s;
+}
+
+std::string Stack::peek()
+{
+	return current->s;
+}
+
+bool Stack::is_empty()
+{
+	if (current == &start) return true;
+	return false;
+}
+
+Stack::~Stack()
+{
+	while (current != &start)
+	{
+		Node* prev = current;
+		current = current->prev;
+		delete prev;
+	}
+}
+
+// 간단한 엑셀 만들기 (출처 : https://modoocode.com/217)
