@@ -24,8 +24,6 @@ namespace MyExcel
 		~Vector(); //소멸자
 	};
 
-	
-
 	// stack 자체 제작
 	class Stack
 	{
@@ -74,6 +72,20 @@ namespace MyExcel
 		~NumStack();
 	};
 
+	class Cell
+	{
+	protected:
+		int x, y;
+		Table* table;
+
+		std::string data;
+
+	public:
+		virtual std::string stringify();
+		virtual int to_numeric();
+
+		Cell(std::string data, int x, int y, Table* table);
+	};
 }
 
 #endif 
