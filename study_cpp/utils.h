@@ -35,8 +35,8 @@ namespace MyExcel
 			Node(Node* prev, std::string s) : prev(prev), s(s) {}
 		};
 
-		Node* current;
-		Node start;
+		Node* current; //현재 최상위 노드
+		Node start; //최하위 노드 
 
 	public:
 		Stack();
@@ -70,6 +70,34 @@ namespace MyExcel
 		bool is_empty();
 
 		~NumStack();
+	};
+
+	class Table
+	{
+	protected:
+		int max_row_size, max_col_size;
+
+		// 데이터를 보관하는 테이블
+		// Cell*을 보관하는 2차원 배열 
+		Cell*** data_table;
+
+	public:
+		Table(int max_row_size, int max_col_size);
+		~Table();
+
+		// 새로운 셀을 등록
+		void reg_cell(Cell* c, int row, int col);
+
+		//해당 셀의 정수값을 반환
+		int to_numeric(const std::string& s);
+		//행 및 열 번호로 셀을 호출
+		int to_numeric(int row, int col);
+
+		//해당 셀의 문자열을 반환
+		std::string stringify(const std::string& s);
+		std::string stringify(int row, int col);
+
+		virtual std::string print_table() = 0;
 	};
 
 	class Cell

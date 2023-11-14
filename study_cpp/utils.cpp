@@ -143,4 +143,42 @@ namespace MyExcel
 			delete prev;
 		}
 	}
+
+	Cell::Cell(std::string data, int x, int y, Table* table)
+		: data(data), x(x), y(y), table(table) {}
+
+	std::string Cell::stringify() { return data; }
+	int Cell::to_numeric() { return 0; }
+
+	Table::Table(int max_row_size, int max_col_size)
+		: max_row_size(max_row_size), max_col_size(max_col_size)
+	{
+		data_table = new Cell**[max_row_size];
+		for (int i = 0; i < max_row_size; i++)
+		{
+			data_table[i] = new Cell*[max_col_size];
+			for (int j = 0; j < max_col_size; j++)
+			{
+				data_table[i][j] = NULL;
+			}
+		}
+	}
+
+	Table::~Table()
+	{
+		for (int i = 0; i < max_row_size; i++)
+		{
+			for (int j = 0; j < max_col_size; j++)
+			{
+				if (data_table[i][j])
+					delete data_table[i][j]; // cell 객체 지우기
+			}
+		}
+
+		for (int i = 0; i < max_row_size; i++)
+		{
+			delete[] data_table[i]; // cell 배열 지우기
+		}
+		delete[] data_table; // 2차원 테이블 지우기 
+	}
 }
