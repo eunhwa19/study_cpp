@@ -1,3 +1,5 @@
 ﻿  main.cpp
-C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(16,20): warning C4018: '<': signed 또는 unsigned가 일치하지 않습니다.
+C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(12,44): warning C4244: '인수': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(17): message : 컴파일되는 함수 템플릿 인스턴스화 'std::array<float,5> build_array<int,unsigned int,char,float,bool>(int &&,unsigned int &&,char &&,float &&,bool &&)'에 대한 참조를 확인하세요.
+C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(12,44): warning C4244: '인수': 'unsigned int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
   study_cpp.vcxproj -> C:\Users\user\Desktop\study_cpp\Debug\study_cpp.exe
