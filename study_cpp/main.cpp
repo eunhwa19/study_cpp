@@ -1,9 +1,58 @@
 #include "main.h"
 
 #include <iostream>
-#include <array>
-#include <type_traits>
+#include <string>
+#include <forward_list>
 
+//1.5.3 연습 문제 3: 연결 리스트에서 remove_if() 함수를 이용한 조건부 원소 삭제
+// - 일부 시민들의 정보를 이용하여 선거권이 없는 사람을 가려내기
+struct citizen
+{
+	std::string name;
+	int age;
+};
+
+std::ostream& operator<<(std::ostream& os, const citizen& c)
+{
+	return (os << "[" << c.name << ", " << c.age << "]");
+}
+
+int main()
+{
+	std::forward_list<citizen> citizens =
+	{
+		{"kim", 22}, {"lee", 25}, {"park", 18}, {"jin", 16}
+	};
+
+	auto citizens_copy = citizens; //deep copy
+
+	std::cout << "전체 시민들: ";
+	for (const auto& c : citizens)
+		std::cout << c << " ";
+	std::cout << std::endl;
+
+	citizens.remove_if([](const citizen &c) //람다 표현식
+	{
+		return (c.age < 19);
+	});
+
+	std::cout << "투표권이 있는 시민들: ";
+	for (const auto& c : citizens)
+		std::cout << c << " ";
+	std::cout << std::endl;
+
+	citizens_copy.remove_if([](const citizen& c)
+	{
+		return (c.age != 18);
+	});
+
+	std::cout << "내년에 투표권이 생기는 시민들: ";
+	for (const auto& c : citizens_copy)
+		std::cout << c << " ";
+	std::cout << std::endl;
+}
+
+/*
 //1.3.2 연습 문제2: 빠르고 범용적인 데이터 저장 컨테이너 만들기
 template<typename ... Args> //가변 템플릿 //점 세 개는 가변 인자
 auto build_array(Args&&... args)->std::array<typename std::common_type<Args...>::type, sizeof...(args)>
@@ -21,6 +70,7 @@ int main()
 		std::cout << i << " ";
 	std::cout << std::endl;
 }
+*/
 
 /*
 //1.3.1 연습 문제1: 동적 크기 배열 구현하기 - 학생 정보 관리 프로그램
