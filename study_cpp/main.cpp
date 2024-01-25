@@ -1,9 +1,40 @@
 #include "main.h"
 
 #include <iostream>
-#include <string>
 #include <forward_list>
+#include <vector>
 
+//1.6.4 연습 문제 4: 다양한 반복자에서 이동하기
+// - 벡터 반복자를 사용하여 데이터로부터 유용한 정보를 검색
+int main()
+{
+	std::vector<std::string> vec = {
+		"Lewis Hamilton", "Lewis Hamilton", "Nico Roseberg",
+		"Sebastian Vettel", "Lewis Hamilton", "Sebastian Vettel",
+		"Sebastian Vettel", "Sebastian Vettel", "Fernando Alonso"
+	};
+
+	auto it = vec.begin(); //상수 시간
+	std::cout << "가장 최근 우승자: " << *it << std::endl;
+	
+	it += 8;
+	std::cout << "8년 전 우승자: " << *it << std::endl;
+
+	advance(it, -3); //상수 시간
+	std::cout << "그 후 3년 뒤 우승자: " << *it << std::endl;
+
+	std::forward_list<std::string> fwd(vec.begin(), vec.end());
+
+	auto it1 = fwd.begin();
+	std::cout << "가장 최근 우승자: " << *it1 << std::endl;
+
+	advance(it1, 5);
+	std::cout << "5년 전 우승자: " << *it1 << std::endl;
+
+}
+
+
+/*
 //1.5.3 연습 문제 3: 연결 리스트에서 remove_if() 함수를 이용한 조건부 원소 삭제
 // - 일부 시민들의 정보를 이용하여 선거권이 없는 사람을 가려내기
 struct citizen
@@ -51,6 +82,7 @@ int main()
 		std::cout << c << " ";
 	std::cout << std::endl;
 }
+*/
 
 /*
 //1.3.2 연습 문제2: 빠르고 범용적인 데이터 저장 컨테이너 만들기
