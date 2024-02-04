@@ -1,8 +1,211 @@
 #include "main.h"
 
 #include <iostream>
-#include <algorithm>
 
+//1.6.3 실습 문제 1: 음악 재생목록 구현하기
+// 1. 일단 기본 컨테이너를 만든다 
+// 2. 원형 데이터 표현 -> 마지막 원소 다음에 첫 번째 원소가 와야함. 
+// 3. next(), previous(), printall(), insert(), remove() 함수 필요
+// 4. 반복자 작성 (begin(), end() 포함) 
+
+template <typename T>
+struct cir_list_node
+{
+	T* data; 
+	cir_list_node* next; 
+	cir_list_node* prev;
+
+	~cir_list_node()
+	{
+		delete data;
+	}
+};
+
+template <typename T>
+class cir_list
+{
+public:
+	using node = cir_list_node<T>;
+	using node_ptr = node*;
+
+	cir_list() : n(0)
+	{
+		head = new node{ NULL, NULL, NULL }; // 모두 NULL로 구성된 더미 노드
+		head->next = head;
+		head->prev = head;
+	}
+
+	size_t size() const
+	{
+		return n;
+	}
+
+	void insert(const T& value) //insert beginning
+	{
+		node_ptr newNode = new node{ new T(value), NULL, NULL };
+		n++;
+		auto dummy = head->prev; 
+		dummy->next = newNode; 
+		newNode->prev = dummy; 
+
+		if (head == dummy)
+		{
+			dummy->prev = newNode;
+			newNode->next = dummy;
+			head = newNode;
+			return;
+		}
+
+		newNode->next = head;
+		head->prev = newNode;
+		head = newNode;
+	}
+
+	void erase(const T& value)
+	{
+		auto cur = head, dummy = head->prev;
+		while (cur != dummy)
+		{
+			if (*(cur->data) == value)
+			{
+				cur->prev->next = cur->next;
+				cur->next->next = cur->prev;
+
+				if (cur == head)
+					head = head->next;
+				delete cur;
+				n--;
+				return;
+			}
+			cur = cur->next;
+		}
+	}
+
+	struct cir_list_iterator
+	{
+	private:
+		node_ptr ptr;
+	public:
+		cir_list_iterator(node_ptr p) : ptr(p) {} //생성자
+
+		T& operator*()
+		{
+			return *(ptr->data);
+		}
+
+		node_ptr get()
+		{
+			return ptr;
+		}
+
+		cir_list_iterator& operator++()
+		{
+			ptr = ptr->next;
+			return *this;
+		}
+
+		cir_list_iterator& operator++(int)
+		{
+			cir_list_iterator it = *this;
+			++(*this);
+			return it;
+		}
+
+		cir_list_iterator& operator--()
+		{
+			ptr = ptr->prev;
+			return *this;
+		}
+
+		cir_list_iterator& operator--(int)
+		{
+			cir_list_iterator it = *this;
+			--(*this);
+			return it;
+		}
+
+		friend bool operator==(const cir_list_iterator& it1, const cir_list_iterator& it2)
+		{
+			return it1.ptr == it2.ptr;
+		}
+
+		friend bool operator!=(const cir_list_iterator& it1, const cir_list_iterator& it2)
+		{
+			return it1.ptr != it2.ptr;
+		}
+
+	};
+
+	cir_list_iterator begin() { return cir_list_iterator{ head }; }
+	cir_list_iterator begin() const { return cir_list_iterator{ head }; }
+	cir_list_iterator end() { return cir_list_iterator{ head->prev }; }
+	cir_list_iterator end() const { return cir_list_iterator{ head->prev }; }
+
+	cir_list(const cir_list<T>& other) : cir_list()
+	{
+		for (const auto& i : other) //역순으로 삽입하지만 원형 리스트라서 문제 없음
+			insert(i);
+	}
+
+	cir_list(const std::initializer_list<T>& il) : head(NULL), n(0)
+	{
+		for (const auto& i : other)
+			insert(i);
+	}
+
+	~cir_list()
+	{
+		while (size())
+		{
+			erase(*(head->data));
+		}
+
+		delete head;
+	}
+
+private:
+	node_ptr head;
+	size_t n;
+};
+
+struct playlist
+{
+	cir_list<int> list;
+
+	void insert(int song)
+	{
+		list.insert(song);
+	}
+
+	void erase(int song)
+	{
+		list.erase(song);
+	}
+
+	void loopOnce()
+	{
+		for (auto& song : list)
+			std::cout << song << " ";
+		std::cout << std::endl;
+	}
+};
+
+int main()
+{
+	playlist pl;
+	pl.insert(1);
+	pl.insert(2);
+	std::cout << "재생 목록 : ";
+	pl.loopOnce();
+
+	playlist pl2 = pl;
+	pl2.erase(2);
+	pl2.insert(3);
+	std::cout << "두 번째 재생목록 : ";
+	pl2.loopOnce();
+}
+
+/*
 //1.6.2 연습 문제 5: 기본적인 사용자 정의 컨테이너 만들기
 struct singly_ll_node
 {
@@ -107,6 +310,7 @@ public:
 		for (auto it = std::rbegin(ilist); it != std::rend(ilist); it++)
 			push_front(*it);
 	}
+
 private:
 	node_ptr head;
 };
@@ -114,15 +318,15 @@ private:
 int main()
 {
 	singly_ll sll = { 1, 2, 3 };
-	sll.push_front(0);
+	sll.push_front(0); //0, 1, 2, 3
 
 	std::cout << "첫 번째 리스트 : ";
 	for (auto i : sll)
 		std::cout << i << " ";
 	std::cout << std::endl;
 
-	auto sll2 = sll;
-	sll2.push_front(-1);
+	auto sll2 = sll; //깊은 복사 
+	sll2.push_front(-1); // -1, 0, 1, 2, 3
 	std::cout << "첫 번째 리스트를 복사한 후, 맨 앞에 -1을 추가: ";
 	for (auto i : sll2)
 		std::cout << i << ' ';
@@ -130,12 +334,12 @@ int main()
 
 	std::cout << "깊은 복사 후 첫 번째 리스트: ";
 
-	for (auto i : sll)
+	for (auto i : sll) //0, 1, 2, 3 
 		std::cout << i << ' ';
 	std::cout << std::endl;
 
 }
-
+*/
 
 /*
 //1.6.4 연습 문제 4: 다양한 반복자에서 이동하기
