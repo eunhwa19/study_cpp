@@ -56,7 +56,10 @@ struct card
 			os << "spades";
 			break;
 		case CLUB:
-			os << "Diamonds";
+			os << "clubs";
+			break;
+		case DIAMOND:
+			os << "diamonds";
 			break;
 		}
 
@@ -72,12 +75,13 @@ struct game
 	void buildDeck()
 	{
 		for (int i = 0; i < 13; i++)
-		{
 			deck[i] = card{ i + 1, card::HEART };
-			deck[i] = card{ i + 1, card::SPADE };
-			deck[i] = card{ i + 1, card::CLUB };
-			deck[i] = card{ i + 1, card::DIAMOND };
-		}
+		for (int i = 0; i < 13; i++)
+			deck[i + 13] = card{ i + 1, card::SPADE };
+		for (int i = 0; i < 13; i++)
+			deck[i + 26] = card{ i + 1, card::CLUB };
+		for (int i = 0; i < 13; i++)
+			deck[i + 39] = card{ i + 1, card::DIAMOND };
 	}
 
 	void dealCards()
@@ -98,6 +102,7 @@ struct game
 			p2.pop_back();
 			return true;
 		}
+		return false;
 	}
 
 	void playOneRound()
@@ -139,7 +144,7 @@ struct game
 
 	bool isGameComplete() const
 	{
-		return player1.empty() || player2.empty() || player3.empty() || player4.empty();
+		return (player1.empty() || player2.empty() || player3.empty() || player4.empty());
 	}
 
 	void playGame()
@@ -166,7 +171,7 @@ struct game
 int main()
 {
 	game newGame;
-	newGame buildDeck();
+	newGame.buildDeck();
 	newGame.dealCards();
 	newGame.playGame();
 	auto winner = newGame.getWinner();
