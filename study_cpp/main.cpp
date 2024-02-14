@@ -1,13 +1,225 @@
 #include "main.h"
 
 #include <iostream>
-#include <vector>
-#include <array>
-#include <sstream>
-#include <algorithm>
-#include <random>
-#include <chrono>
+#include <queue>
 
+// 2.3.1 연습문제 7: 회사 조직도 구조 만들기, 
+struct node // binary tree
+{
+	std::string position;
+	node* first;
+	node* second;
+};
+
+struct org_tree
+{
+	node* root;
+
+	//루트 노드(회사 대표) 생성
+	static org_tree create_org_structure(const std::string& pos)
+	{
+		org_tree tree;
+		tree.root = new node{ pos, NULL, NULL };
+		return tree;
+	}
+
+	static node* find(node* root, const std::string& value)
+	{
+		if (root == NULL)
+			return NULL;
+
+		if (root->position == value)
+			return root;
+
+		auto firstFound = org_tree::find(root->first, value);
+
+		if (firstFound != NULL)
+			return firstFound;
+
+		return org_tree::find(root->second, value);
+	}
+
+	bool addSubordinate(const std::string& manager, const std::string& subordinate)
+	{
+		auto managerNode = org_tree::find(root, manager);
+
+		if (!managerNode) //매니저 노드에 아무것도 없으면
+		{
+			std::cout << manager << "을(를) 찾을 수 없습니다: " << std::endl;
+			return false;
+		}
+
+		if (managerNode->first && managerNode->second) //자식 노드가 다 차있으면
+		{
+			std::cout << manager << " 아래에 " << subordinate << "을(를) 추가할 수 없습니다. " << std::endl;
+			return false;
+		}
+
+		if (!managerNode->first)
+			managerNode->first = new node { subordinate, NULL, NULL }; // 첫 번째에 추가 
+
+		else
+			managerNode->second = new node { subordinate, NULL, NULL }; // 두 번째에 추가 
+
+		std::cout << manager << " 아래에 " << subordinate << "을(를) 추가했습니다. " << std::endl;
+
+		return true; // 원소 추가 성공 
+	}
+
+	static void preOrder(node* start)
+	{
+		if (!start)
+			return;
+
+		std::cout << start->position << ", ";
+		preOrder(start->first);
+		preOrder(start->second);
+	}
+
+	static void inOrder(node* start)
+	{
+		if (!start)
+			return;
+
+		inOrder(start->first);
+		std::cout << start->position << ", ";
+		inOrder(start->second);
+	}
+
+	static void postOrder(node* start)
+	{
+		if (!start)
+			return;
+
+		postOrder(start->first);
+		postOrder(start->second);
+		std::cout << start->position << ", ";
+	}
+
+	//연습문제 8: 레벨 순서 순회 구현하기 
+	static void levelOrder(node* start)
+	{
+		if (!start)
+			return;
+
+		std::queue<node*> q;
+		q.push(start);
+
+		while (!q.empty())
+		{
+			int size = q.size();
+			for (int i = 0; i < size; i++)
+			{
+				auto current = q.front();
+				q.pop();
+
+				std::cout << current->position << ", ";
+				if (current->first)
+					q.push(current->first);
+				if (current->second)
+					q.push(current->second);
+			}
+
+			std::cout << std::endl;
+		}
+	}
+};
+
+int main()
+{
+	auto tree = org_tree::create_org_structure("CEO");
+
+	tree.addSubordinate("CEO", "부사장");
+	tree.addSubordinate("부사장", "IT부장");
+	tree.addSubordinate("부사장", "마케팅부장");
+	tree.addSubordinate("IT부장", "보안팀장");
+	tree.addSubordinate("IT부장", "앱개발팀장");
+	tree.addSubordinate("마케팅부장", "물류팀장");
+	tree.addSubordinate("마케팅부장", "홍보팀장");
+	tree.addSubordinate("부사장", "재무부장");
+
+	std::cout << std::endl;
+
+	org_tree::levelOrder(tree.root);
+}
+
+/*
+//1.10.1 실습 문제 3: 사무실 공유 프린터의 인쇄 대기 목록 시뮬레이션
+class Job
+{
+private:
+	int id;
+	std::string user;
+	int pages;
+
+	static int count;
+
+public:
+	Job(const std::string& u, int p) : user(u), pages(p), id(++count) {}
+
+	friend std::ostream& operator<<(std::ostream& os, const Job& j)
+	{
+		os << "id: " << j.id << ", 사용자: " << j.user << ", 페이지 수: " << j.pages << "장";
+		return os;
+	}
+};
+
+int Job::count = 0;
+
+template <size_t N>
+class Printer
+{
+	std::queue<Job> jobs;
+
+public:
+	bool addNewJob(const Job& job)
+	{
+		if (jobs.size() == N)
+		{
+			std::cout << "인쇄 대기열에 추가 실패: " << job << std::endl;
+			return false;
+		}
+
+		std::cout << "인쇄 대기열에 추가: " << job << std::endl;
+		jobs.push(job);
+		return true;
+	}
+
+	void startPrinting()
+	{
+		while (!jobs.empty())
+		{
+			std::cout << "인쇄 중: " << jobs.front() << std::endl;
+			jobs.pop();
+		}
+	}
+};
+
+int main()
+{
+	Printer<5> printer;
+
+	Job j1("광희", 10);
+	Job j2("정다", 4);
+	Job j3("현수", 5);
+	Job j4("유미", 7);
+	Job j5("채원", 8);
+	Job j6("시원", 10);
+
+	printer.addNewJob(j1);
+	printer.addNewJob(j2);
+	printer.addNewJob(j3);
+	printer.addNewJob(j4);
+	printer.addNewJob(j5);
+	printer.addNewJob(j6);
+	printer.startPrinting();
+
+	printer.addNewJob(j6);
+	printer.startPrinting();
+}
+*/
+
+/*
 //1.7.5 실습 문제 2: 카드 게임 시뮬레이션 
 struct card
 {
@@ -177,6 +389,7 @@ int main()
 	auto winner = newGame.getWinner();
 	std::cout << winner << "번 플레이어가 이겼습니다!" << std::endl;
 }
+*/
 
 /*
 //1.6.3 실습 문제 1: 음악 재생목록 구현하기
