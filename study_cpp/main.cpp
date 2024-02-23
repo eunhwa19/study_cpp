@@ -1,9 +1,181 @@
 #include "main.h"
 
 #include <iostream>
-#include <queue>
 
-// 2.3.1 연습문제 7: 회사 조직도 구조 만들기, 
+/*
+// 2.4.3 연습문제 9: binary search tree 구현 
+struct node
+{
+	int data;
+	node* left;
+	node* right;
+};
+
+struct bst
+{
+	node* root = nullptr;
+	
+	node* find(int value)
+	{
+		//원소 검색은 재귀적으로 동작하기 때문에 실제 구현은 find_impl()에 따로 작성하고 
+		//private으로 지정하여 외부에서 직접 지정하지 못하게 함 
+		return find_impl(root, value); 
+	}
+
+private: 
+	node* find_impl(node* current, int value) //value를 찾아줘라 
+	{
+		if (!current) 
+		{
+			std::cout << std::endl;
+			return NULL;
+		}
+
+		if (current->data == value)
+		{
+			std::cout << value << "을(를) 찾았습니다." << std::endl;
+			return current;
+		}
+
+		if (value < current->data) //value값이 현재 노드의 왼쪽에 있는 경우 
+		{
+			std::cout << current->data << "에서 왼쪽으로 이동 ";
+			return find_impl(current->left, value);
+		}
+
+		//value값이 현재 노드 오른쪽에 있는 경우 
+		std::cout << current->data << "에서 오른쪽으로 이동 ";
+		return find_impl(current->right, value);
+	}
+
+public:
+	void insert(int value) //삽입 함수
+	{
+		if (!root)
+			root = new node{ value, NULL, NULL };
+		else
+			insert_impl(root, value);
+	}
+
+private:
+	void insert_impl(node* current, int value)
+	{
+		if (value < current->data)
+		{
+			if (!current->left) //값을 삽입해야하는 쪽이 비어있으면 
+				current->left = new node { value, NULL, NULL }; //새로 노드를 추가한다. 
+			else
+				insert_impl(current->left, value);
+		}
+		else
+		{
+			if (!current->right)
+				current->right = new node { value, NULL, NULL };
+			else
+				insert_impl(current->right, value);
+		}
+	}
+
+public:
+	void inorder() //중위 순회 함수 
+	{
+		inorder_impl(root);
+	}
+
+private: 
+	void inorder_impl(node* start)
+	{
+		if (!start)
+			return;
+
+		inorder_impl(start->left);
+		std::cout << start->data << " ";
+		inorder_impl(start->right);
+	}
+
+public:
+	node* successor(node* start) // 후속 노드를 찾는 함수
+	{
+		auto current = start->right;
+		while (current && current->left)
+			current = current->left;
+		return current;
+	}
+
+	void deleteValue(int value)
+	{
+		root = delete_impl(root, value);
+	}
+
+private:
+	node* delete_impl(node* start, int value)
+	{
+		if (!start)
+			return NULL;
+		
+		if (value < start->data)
+			start->left = delete_impl(start->left, value);
+		else if (value > start->data)
+			start->right = delete_impl(start->right, value);
+		else //value == start->data
+		{
+			if (!start->left) //자식 노드가 전혀 없거나, 왼쪽 자식 노드만 없는 경우 
+			{
+				auto tmp = start->right; //오른쪽으로 이동
+				delete start;
+				return tmp;
+			}
+
+			if (!start->right) //오른쪽 자식 노드만 없는 경우 
+			{
+				auto tmp = start->left; //왼쪽으로 이동 
+				delete start;
+				return tmp;
+			}
+			
+			//자식 노드가 둘 다 있는 경우
+			auto succNode = successor(start); 
+			start->data = succNode->data; 
+
+			//오른쪽 서브 트리에서 후속(successor)을 찾아 삭제 
+			start->right = delete_impl(start->right, succNode->data);
+		}
+
+		return start;
+	}
+};
+
+int main()
+{
+	bst test_tree;
+	test_tree.insert(12);
+	test_tree.insert(10);
+	test_tree.insert(20);
+	test_tree.insert(8);
+	test_tree.insert(11);
+	test_tree.insert(15);
+	test_tree.insert(28);
+	test_tree.insert(4);
+	test_tree.insert(2);
+
+	std::cout << "중위 순회: ";
+	test_tree.inorder();
+	std::cout << std::endl;
+
+	test_tree.deleteValue(12);
+	std::cout << "12를 삭제한 후 중위 순회: ";
+	test_tree.inorder();
+	std::cout << std::endl;
+
+	if (test_tree.find(12))
+		std::cout << "원소 12는 트리에 있습니다. " << std::endl;
+	else
+		std::cout << "원소 12는 트리에 없습니다. " << std::endl;
+}
+*/
+
+/*
+// 2.3.1 연습문제 7: 회사 조직도 구조 만들기
 struct node // binary tree
 {
 	std::string position;
@@ -66,7 +238,7 @@ struct org_tree
 		return true; // 원소 추가 성공 
 	}
 
-	static void preOrder(node* start)
+	static void preOrder(node* start) // 전위 순회
 	{
 		if (!start)
 			return;
@@ -76,7 +248,7 @@ struct org_tree
 		preOrder(start->second);
 	}
 
-	static void inOrder(node* start)
+	static void inOrder(node* start) // 중위 순회
 	{
 		if (!start)
 			return;
@@ -86,7 +258,7 @@ struct org_tree
 		inOrder(start->second);
 	}
 
-	static void postOrder(node* start)
+	static void postOrder(node* start) // 후위 순회
 	{
 		if (!start)
 			return;
@@ -102,22 +274,23 @@ struct org_tree
 		if (!start)
 			return;
 
-		std::queue<node*> q;
-		q.push(start);
+		std::queue<node*> q; 
+		q.push(start); 
 
 		while (!q.empty())
 		{
 			int size = q.size();
 			for (int i = 0; i < size; i++)
 			{
-				auto current = q.front();
-				q.pop();
-
+				auto current = q.front(); 
 				std::cout << current->position << ", ";
+				
 				if (current->first)
 					q.push(current->first);
 				if (current->second)
 					q.push(current->second);
+
+				q.pop();
 			}
 
 			std::cout << std::endl;
@@ -142,6 +315,7 @@ int main()
 
 	org_tree::levelOrder(tree.root);
 }
+*/
 
 /*
 //1.10.1 실습 문제 3: 사무실 공유 프린터의 인쇄 대기 목록 시뮬레이션
