@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <array>
 
+//연습문제1 : 동적 크기 배열 구현
 template <typename T>
 class dynamic_array
 {
@@ -14,8 +15,8 @@ class dynamic_array
 public:
 	dynamic_array(int n) //constructor
 	{
-		this->n = n;
-		data = new T[n];
+		this->n = n; //this: 호출된 객체의 주소를 가리키는 상수 포인터 
+		data = new T[n]; //dynamic memory allocation 
 	}
 
 	dynamic_array(const dynamic_array<T>& other) //copy constructor 
@@ -24,20 +25,20 @@ public:
 		data = new T[n];
 
 		for (int i = 0; i < n; i++)
-			data[i] = other[i];
+			data[i] = other[i]; //전달 받은 객체와 동일하게 객체를 복사
 	}
 
-	T& operator[] (int index)
+	T& operator[] (int index) //Operator overloading
+	{
+		return data[index]; 
+	}
+
+	const T& operator[](int index) const //const 멤버 함수
 	{
 		return data[index];
 	}
 
-	const T& operator[](int index) const
-	{
-		return data[index];
-	}
-
-	T& at(int index)
+	T& at(int index) 
 	{
 		if (index < n)
 			return data[index];
@@ -49,7 +50,7 @@ public:
 		return n;
 	}
 
-	~dynamic_array()
+	~dynamic_array() //destructor
 	{
 		delete[] data;
 	}
