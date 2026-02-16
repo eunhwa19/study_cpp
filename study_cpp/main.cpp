@@ -1,10 +1,28 @@
 #include "main.h"
 
 #include <iostream>
-#include <sstream>
-#include <algorithm>
 #include <array>
+#include <type_traits>
 
+//연습문제 2: 빠르고 범용적인 데이터 저장 컨테이너 만들기 
+template<typename ... Args>
+auto build_array(Args&&... args) -> std::array<typename std::common_type<Args...>::type, sizeof...(args)>
+// 후행 리턴 타입(trailing return type) : 함수의 반환 타입을 함수 매개변수 목록 뒤에 명시하는 방법
+{
+	using commonType = typename std::common_type<Args...>::type;
+	return { std::forward<commonType>((Args&&)args)... };
+}
+
+int main()
+{
+	auto data = build_array(1, 0u, 'a', 3.2f, false);
+
+	for (auto i : data)
+		std::cout << i << " ";
+	std::cout << std::endl;
+}
+
+/*
 //연습문제1 : 동적 크기 배열 구현
 template <typename T>
 class dynamic_array
@@ -130,4 +148,4 @@ int main()
 
 	return 0;
 }
-
+*/

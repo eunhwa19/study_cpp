@@ -1,32 +1,9 @@
 ﻿  main.cpp
-C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(80,21): warning C4018: '<': signed/unsigned mismatch
-      C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(80,21):
+C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(12,44): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+      C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(12,44):
       the template instantiation context (the oldest one first) is
-          C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(104,25):
-          see reference to class template instantiation 'dynamic_array<student>' being compiled
-          C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(72,14):
-          while compiling class template member function 'std::string dynamic_array<student>::to_string(const std::string &)'
-              C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(125,74):
-              see the first reference to 'dynamic_array<student>::to_string' in 'main'
+          C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(17,14):
+          see reference to function template instantiation 'std::array<float,5> build_array<int,unsigned int,char,float,bool>(int &&,unsigned int &&,char &&,float &&,bool &&)' being compiled
   
-C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(42,13): warning C4018: '<': signed/unsigned mismatch
-      C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(42,13):
-      the template instantiation context (the oldest one first) is
-          C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(40,5):
-          while compiling class template member function 'T &dynamic_array<T>::at(int)'
-          with
-          [
-              T=student
-          ]
-              C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(116,24):
-              see the first reference to 'dynamic_array<student>::at' in 'main'
-  
-C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(26,21): warning C4018: '<': signed/unsigned mismatch
-      C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(26,21):
-      the template instantiation context (the oldest one first) is
-          C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(21,2):
-          while compiling class template member function 'dynamic_array<student>::dynamic_array(const dynamic_array<student> &)'
-              C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(124,14):
-              see the first reference to 'dynamic_array<student>::dynamic_array' in 'main'
-  
+C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(12,44): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
   study_cpp.vcxproj -> C:\Users\user\Desktop\study_cpp\Debug\study_cpp.exe
