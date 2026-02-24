@@ -1,9 +1,2 @@
 ﻿  main.cpp
-C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(12,44): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-      C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(12,44):
-      the template instantiation context (the oldest one first) is
-          C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(17,14):
-          see reference to function template instantiation 'std::array<float,5> build_array<int,unsigned int,char,float,bool>(int &&,unsigned int &&,char &&,float &&,bool &&)' being compiled
-  
-C:\Users\user\Desktop\study_cpp\study_cpp\main.cpp(12,44): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
   study_cpp.vcxproj -> C:\Users\user\Desktop\study_cpp\Debug\study_cpp.exe
