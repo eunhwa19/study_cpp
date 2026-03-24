@@ -1,12 +1,53 @@
 #include "main.h"
 
 #include <iostream>
-#include <algorithm>
+#include <string>
 
+// 실습문제 1 : 음악 재생 목록 구현하기 (직접 풀기!) 
+// 조건 
+// 1. 여러 개의 음악을 이용하여 재생 목록을 생성할 수 있습니다. 
+// 2. 재생 목록에 음악을 추가할 수 있어야 합니다. 
+// 3. 재생 목록에서 음악을 제거할 수 있어야 합니다. 
+// 4. 음악을 순환적으로 재생할 수 있어야 합니다. (circular linked list)
+
+// 순서
+// 1. 원형 데이터 표현을 지원하는 기본 구조를 설계합니다. 
+// 2. 앞에서 만든 구조에 데이터 삽입 및 삭제 기능을 구현합니다. 
+// 3. 사용자 정의 반복자를 작성합니다. 범위 기반 for문을 사용하여 모든 원소에 접근할 수 있도록 반복자 설계,
+//    따라서 자료구조는 원형이지만 begin(), end() 함수는 각각 다른 주소를 반환해야 합니다. 
+// 4. 기본 컨테이너를 만든 후, 이 컨테이너를 기반으로 재생 목록에 여러 음악을 저장하고 
+//    next(), previous(), printall(), insert(), remove() 같은 함수를 작성합니다. 
+
+struct cir_list_node
+{
+	std::string title;
+	cir_list_node* prev;
+	cir_list_node* next;
+};
+
+class cir_list
+{
+public:
+	cir_list_node node;
+
+private:
+	cir_list_node* head; 
+	
+public:
+	cir_list insert(std::string val)
+	{
+		auto new_node = new node();
+	}
+	cir_list remove();
+
+};
+
+
+/*
 //연습문제 5 : 기본적인 사용자 정의 컨테이너 만들기
 struct singly_ll_node //singly linked list 
 {
-	int data;
+	int data; 
 	singly_ll_node* next;
 };
 
@@ -24,7 +65,7 @@ public:
 	{
 		auto new_node = new node{ val, NULL };
 		if (head != NULL)
-			new_node->next = head;
+			new_node->next = head; // head가 가리키는 것을 가리킴 
 		head = new_node;
 	}
 
@@ -50,13 +91,13 @@ public:
 
 		node_ptr get() { return ptr; }
 
-		singly_ll_iterator& operator++()
+		singly_ll_iterator& operator++() // 선행 증가
 		{
 			ptr = ptr->next;
 			return *this;
 		}
 
-		singly_ll_iterator operator++(int)
+		singly_ll_iterator operator++(int) // 후행 증가 
 		{
 			singly_ll_iterator result = *this;
 			++(*this);
@@ -74,40 +115,40 @@ public:
 		}
 	};
 
-	singly_ll_iterator begin() { return singly_ll_iterator(head); }
+	singly_ll_iterator begin() { return singly_ll_iterator(head); } // 리스트 내용을 수정할 수 있을 때 
 	singly_ll_iterator end() { return singly_ll_iterator(NULL); }
-	singly_ll_iterator begin() const { return singly_ll_iterator(head); }
+	singly_ll_iterator begin() const { return singly_ll_iterator(head); } // 수정할 수 없을 때 const를 씀 
 	singly_ll_iterator end() const { return singly_ll_iterator(NULL); }
 
-	singly_ll() = default;
-
-	singly_ll(const singly_ll& other) : head(NULL)
+	singly_ll() = default; // default constructor 
+	 
+	singly_ll(const singly_ll& other) : head(NULL) // copy constructor
 	{
-		if (other.head)
+		if (other.head) // head가 있으면 
 		{
-			head = new node{ 0, NULL };
-			auto cur = head;
-			auto it = other.begin();
+			head = new node{ 0, NULL }; 
+			auto cur = head; 
+			auto it = other.begin(); //iterator 사용
 			while (true)
 			{
-				cur->data = *it;
+				cur->data = *it; //iterator가 가리키는 내용을 지금 노드에 복사 
 
-				auto tmp = it;
-				++tmp;
-				if (tmp == other.end())
+				auto tmp = it; // 임시 반복자 
+				++tmp; 
+				if (tmp == other.end()) //끝나면 종료
 					break;
 				
-				cur->next = new node{ 0, NULL };
-				cur = cur->next;
+				cur->next = new node{ 0, NULL }; // 안 끝나면 새로 만들기 
+				cur = cur->next; 
 				it = tmp;
 			}
 		}
 	}
 
-	singly_ll(const std::initializer_list<int>& ilist) : head(NULL)
+	singly_ll(const std::initializer_list<int>& ilist) : head(NULL) //initialization list 
 	{
-		for (auto it = std::rbegin(ilist); it != std::rend(ilist); it++)
-			push_front(*it);
+		for (auto it = std::rbegin(ilist); it != std::rend(ilist); it++) //거꾸로 순회
+			push_front(*it); 
 	}
 };
 
@@ -121,7 +162,7 @@ int main()
 		std::cout << i << " ";
 	std::cout << std::endl;
 
-	auto sll2 = sll;
+	auto sll2 = sll; //deep copy
 	sll2.push_front(-1);
 	std::cout << "첫 번째 리스트를 복사한 후, 맨 앞에 -1을 추가: ";
 	for (auto i : sll2)
@@ -136,7 +177,7 @@ int main()
 
 	return 0;
 }
-
+*/
 /*
 //연습문제 4:; 다양한 반복자에서 이동하기
 int main()
