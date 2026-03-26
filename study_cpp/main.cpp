@@ -1,47 +1,69 @@
 #include "main.h"
 
 #include <iostream>
-#include <string>
+#include <list>
 
-// 실습문제 1 : 음악 재생 목록 구현하기 (직접 풀기!) 
-// 조건 
-// 1. 여러 개의 음악을 이용하여 재생 목록을 생성할 수 있습니다. 
-// 2. 재생 목록에 음악을 추가할 수 있어야 합니다. 
-// 3. 재생 목록에서 음악을 제거할 수 있어야 합니다. 
-// 4. 음악을 순환적으로 재생할 수 있어야 합니다. (circular linked list)
-
-// 순서
-// 1. 원형 데이터 표현을 지원하는 기본 구조를 설계합니다. 
-// 2. 앞에서 만든 구조에 데이터 삽입 및 삭제 기능을 구현합니다. 
-// 3. 사용자 정의 반복자를 작성합니다. 범위 기반 for문을 사용하여 모든 원소에 접근할 수 있도록 반복자 설계,
-//    따라서 자료구조는 원형이지만 begin(), end() 함수는 각각 다른 주소를 반환해야 합니다. 
-// 4. 기본 컨테이너를 만든 후, 이 컨테이너를 기반으로 재생 목록에 여러 음악을 저장하고 
-//    next(), previous(), printall(), insert(), remove() 같은 함수를 작성합니다. 
-
-struct cir_list_node
+// linked list 직접 구현 
+// insert_front(), print() 구현 완료 
+struct node
 {
-	std::string title;
-	cir_list_node* prev;
-	cir_list_node* next;
+	int data; 
+	node* next; 
 };
 
-class cir_list
+class linked_list
 {
-public:
-	cir_list_node node;
-
 private:
-	cir_list_node* head; 
-	
+	node* head; 
+
 public:
-	cir_list insert(std::string val)
-	{
-		auto new_node = new node();
-	}
-	cir_list remove();
+	linked_list() : head(NULL) {} 
+
+	void insert_front(int n);
+	void remove_front();
+	void print();
 
 };
 
+
+void linked_list::insert_front(int n)
+{
+	node* new_node = new node; // 새 노드 생성
+	new_node->data = n; // 새 노드에 데이터 넣기 
+	new_node->next = head;
+	head = new_node;
+}
+
+void linked_list::remove_front()
+{
+	node* temp = head; 
+	head = head->next;
+	delete temp;
+}
+
+void linked_list::print()
+{
+	for (node* cur = head; cur != NULL; cur = cur->next)
+	{
+		std::cout << cur->data << " "; 
+	}
+	std::cout << std::endl;
+}
+
+
+
+int main()
+{
+	linked_list list = {};
+	list.insert_front(3);
+	list.insert_front(2);
+	list.insert_front(1);
+	list.print();
+	list.remove_front();
+	list.remove_front();
+	
+	return 0;
+}
 
 /*
 //연습문제 5 : 기본적인 사용자 정의 컨테이너 만들기
